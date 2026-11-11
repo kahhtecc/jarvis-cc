@@ -11,6 +11,29 @@ JARVIS_REPORTS_DIR="$JARVIS_HOME/reports"
 JARVIS_CONFIG="$JARVIS_HOME/config.toml"
 JARVIS_PLUGIN_ROOT="${JARVIS_PLUGIN_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
+# Interpretador Python: "python3" no Linux/macOS, geralmente "python" no Windows (Git Bash).
+if command -v python3 >/dev/null 2>&1; then JPY=python3
+elif command -v python >/dev/null 2>&1; then JPY=python
+elif command -v py >/dev/null 2>&1; then JPY="py -3"
+else JPY=""; fi
+python3() { if command -v python3 >/dev/null 2>&1; then command python3 "$@"; else $JPY "$@"; fi; }
+
+# Extrai um campo de um JSON lido de stdin (substitui jq). Uso: jarvis_json_get '<json>' campo [default]
+jarvis_json_get() {
+  JSON="$1" KEY="$2" DEF="${3:-}" python3 -I -c '
+import json,os
+try: v=json.loads(os.environ["JSON"]).get(os.environ["KEY"])
+except Exception: v=None
+print(os.environ["DEF"] if v is None else v)'
+}
+jarvis_json_len() {  # tamanho em caracteres de um campo string
+  JSON="$1" KEY="$2" python3 -I -c '
+import json,os
+try: v=json.loads(os.environ["JSON"]).get(os.environ["KEY"]) or ""
+except Exception: v=""
+print(len(str(v)))'
+}
+
 jarvis_ensure_home() {
   mkdir -p "$JARVIS_HOME/memory" "$JARVIS_STATE_DIR" "$JARVIS_TRACES_DIR" \
            "$JARVIS_KNOWLEDGE_DIR" "$JARVIS_DIGESTS_DIR" "$JARVIS_REPORTS_DIR"

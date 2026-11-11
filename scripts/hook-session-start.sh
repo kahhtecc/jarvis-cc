@@ -3,8 +3,8 @@
 . "$(dirname "$0")/jarvis-lib.sh"
 jarvis_ensure_home
 input=$(cat 2>/dev/null || true)
-sid=$(printf '%s' "$input" | jq -r '.session_id // "?"' 2>/dev/null)
-printf '{"session_id":"%s","source":"%s"}' "$sid" "$(printf '%s' "$input" | jq -r '.source // "startup"' 2>/dev/null)" | "$JARVIS_PLUGIN_ROOT/scripts/jarvis-trace.sh" log session_start >/dev/null 2>&1 || true
+sid=$(jarvis_json_get "$input" session_id '?')
+printf '{"session_id":"%s","source":"%s"}' "$sid" "$(jarvis_json_get "$input" source startup)" | "$JARVIS_PLUGIN_ROOT/scripts/jarvis-trace.sh" log session_start >/dev/null 2>&1 || true
 [ "$(jarvis_cfg autoload true)" = "false" ] && exit 0
 {
   echo "## Jarvis CC — contexto persistente (carregado de $JARVIS_HOME)"
@@ -17,7 +17,10 @@ printf '{"session_id":"%s","source":"%s"}' "$sid" "$(printf '%s' "$input" | jq -
   n=$(grep -c . "$JARVIS_MEMORY_FILE" 2>/dev/null || echo 0)
   if [ "$n" -gt 0 ]; then
     echo; echo "### Fatos memorizados (últimos 15 de $n; busque mais com jarvis-memory.sh search)"
-    tail -n 15 "$JARVIS_MEMORY_FILE" | jq -r '"- " + .text' 2>/dev/null
+    tail -n 15 "$JARVIS_MEMORY_FILE" | python3 -I -c 'import sys,json
+for l in sys.stdin:
+  l=l.strip()
+  if l: print("- "+json.loads(l)["text"])'
   fi
   states=$(ls -1 "$JARVIS_STATE_DIR" 2>/dev/null | sed 's/\.md$//' | tr '\n' ' ')
   [ -n "$states" ] && { echo; echo "### Agentes com estado salvo: $states"; }
