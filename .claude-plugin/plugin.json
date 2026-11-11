@@ -1,0 +1,10 @@
+{
+  "name": "jarvis-cc",
+  "displayName": "Jarvis CC",
+  "version": "0.1.0",
+  "description": "OpenJarvis reimaginado para rodar 100% dentro do Claude Code: persona, memória persistente, deep research, briefing diário, agentes monitores com estado, skills e agendamento. Sem API externa, sem servidor local.",
+  "author": { "name": "Kaique" },
+  "repository": "https://github.com/open-jarvis/OpenJarvis",
+  "license": "Apache-2.0",
+  "keywords": ["jarvis", "personal-ai", "memory", "research", "digest", "agents"]
+}

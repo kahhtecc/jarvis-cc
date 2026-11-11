@@ -1,0 +1,13 @@
+{
+  "name": "jarvis-cc-marketplace",
+  "owner": { "name": "Kaique" },
+  "metadata": { "description": "Marketplace local do Jarvis CC" },
+  "plugins": [
+    {
+      "name": "jarvis-cc",
+      "source": "./",
+      "description": "OpenJarvis rodando 100% dentro do Claude Code",
+      "version": "0.1.0"
+    }
+  ]
+}

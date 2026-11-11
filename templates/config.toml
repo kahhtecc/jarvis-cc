@@ -1,0 +1,22 @@
+# Jarvis CC — configuração (lida pelos scripts; chaves simples chave = "valor")
+# Não há [engine] nem [intelligence]: o motor é a própria sessão do Claude Code.
+
+persona = "jarvis"          # jarvis | neutral  (arquivos em ~/.jarvis/personas/)
+honorific = "chefe"         # usado 1 a 3 vezes por briefing
+language = "pt-BR"
+timezone = "America/Sao_Paulo"
+
+autoload = true             # injetar SOUL/USER/MEMORY no início da sessão
+nudge_interval = 10         # a cada N prompts, lembrar de persistir fatos (0 desliga)
+
+# Briefing diário (morning digest)
+digest_sections = "messages,calendar,world"   # messages | calendar | health | world | music
+digest_max_words = 200
+digest_style = "spoken"     # spoken (sem markdown, para ler em voz alta) | markdown
+
+# Deep research
+research_max_hops = 8
+research_cite_sources = true
+
+# Monitor / operative
+monitor_max_turns = 20
